@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   LayoutDashboard, Calendar, Map, Wrench, Users, ClipboardList,
   FileText, BarChart2, Bell, Settings, ChevronDown, ChevronLeft,
@@ -432,6 +432,7 @@ function DashboardView({bp,onNav,addToast}){
 
 // ── SCHEDULE ──────────────────────────────────────────────────────────────────
 function ScheduleView({bp,addToast}){
+  const isMobile=bp==="xs"||bp==="sm";
   const [week,setWeek]=useState("May 12–18, 2025");
   const [view,setView]=useState("week");
   const weeks=["Apr 28 – May 4, 2025","May 5–11, 2025","May 12–18, 2025","May 19–25, 2025","May 26 – Jun 1, 2025"];
@@ -467,7 +468,7 @@ function ScheduleView({bp,addToast}){
       </div>
 
       <Card style={{overflow:"auto"}}>
-        <table style={{width:"100%",borderCollapse:"collapse",minWidth:480}}>
+        <table style={{width:"100%",borderCollapse:"collapse",minWidth:isMobile?320:480}}>
           <thead>
             <tr style={{background:"#f8fafc",borderBottom:`1px solid ${C.border}`}}>
               <th style={{padding:"10px 14px",fontSize:11,color:C.muted,textAlign:"left",fontWeight:600,minWidth:140}}>Technician</th>
@@ -649,6 +650,7 @@ function InstallsView({bp,addToast}){
   const [showForm,setShowForm]=useState(false);
   const [form,setForm]=useState({customer:"",address:"",tech:"",product:"",notes:""});
   const isMobile=bp==="xs"||bp==="sm";
+  const tableMinWidth=isMobile?320:560;
 
   const filtered=installs.filter(i=>{
     const matchF=filter==="all"||i.status===filter;
@@ -697,7 +699,7 @@ function InstallsView({bp,addToast}){
       </div>
 
       <Card style={{overflow:"auto"}}>
-        <table style={{width:"100%",borderCollapse:"collapse",minWidth:560}}>
+        <table style={{width:"100%",borderCollapse:"collapse",minWidth:tableMinWidth}}>
           <thead>
             <tr style={{background:"#f8fafc",borderBottom:`1px solid ${C.border}`}}>
               {["ID","Customer","Technician","Product","Date","Status","Actions"].map(h=>(
@@ -759,12 +761,12 @@ function InstallsView({bp,addToast}){
       {/* Add Form Modal */}
       <Modal open={showForm} onClose={()=>setShowForm(false)} title="New Installation">
         <div style={{display:"flex",flexDirection:"column",gap:12}}>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:10}}>
             <Input label="Customer Name" value={form.customer} onChange={e=>setForm(p=>({...p,customer:e.target.value}))} placeholder="Johnson Residence"/>
             <Input label="Phone" placeholder="(704) 555-0000"/>
           </div>
           <Input label="Address" value={form.address} onChange={e=>setForm(p=>({...p,address:e.target.value}))} placeholder="1234 Pine St, Charlotte"/>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:10}}>
             <div style={{display:"flex",flexDirection:"column",gap:4}}>
               <label style={{fontSize:10,color:C.faint,fontWeight:600,textTransform:"uppercase",letterSpacing:.4}}>Technician</label>
               <select value={form.tech} onChange={e=>setForm(p=>({...p,tech:e.target.value}))} style={{border:`1px solid ${C.border}`,borderRadius:7,padding:"7px 10px",fontSize:12,outline:"none",color:C.mid,background:"#fafafa"}}>
@@ -812,10 +814,10 @@ function EmployeesView({bp,addToast}){
     <div style={{display:"flex",flexDirection:"column",gap:14}}>
       <div style={{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
         <h1 style={{fontSize:18,fontWeight:700,color:C.dark,margin:0}}>Employees</h1>
-        <div style={{marginLeft:"auto",display:"flex",gap:8}}>
-          <div style={{position:"relative"}}>
+        <div style={{marginLeft:"auto",display:"flex",gap:8,flexWrap:"wrap",width:isMobile?"100%":"auto"}}>
+          <div style={{position:"relative",flex:isMobile?1:"none",minWidth:isMobile?0:160}}>
             <Search size={13} style={{position:"absolute",left:9,top:"50%",transform:"translateY(-50%)",color:C.faint}}/>
-            <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search..." style={{paddingLeft:28,height:32,border:`1px solid ${C.border}`,borderRadius:8,fontSize:12,outline:"none",color:C.mid,background:"#fafafa",width:160}}/>
+            <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search..." style={{paddingLeft:28,height:32,border:`1px solid ${C.border}`,borderRadius:8,fontSize:12,outline:"none",color:C.mid,background:"#fafafa",width:isMobile?"100%":160}}/>
           </div>
           <Btn onClick={()=>setShowAdd(true)}><Plus size={12}/>Add Employee</Btn>
         </div>

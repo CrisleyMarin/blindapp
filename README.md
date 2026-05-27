@@ -20,6 +20,16 @@ Luego abre la URL que muestre Vite, normalmente:
 http://127.0.0.1:5173/
 ```
 
+## VS Code
+
+Si ves un error como `Cannot find module ... vscode.git.Git.log`, VS Code esta intentando ejecutar el archivo activo en vez del proyecto.
+
+Usa una de estas opciones:
+
+- Terminal > New Terminal, luego `npm.cmd run dev`.
+- Terminal > Run Task > `Run Blind Ambitions Dashboard`.
+- Run and Debug > `Open Blind Ambitions Dashboard`.
+
 ## Estructura
 
 - `src/App.jsx`: dashboard principal.

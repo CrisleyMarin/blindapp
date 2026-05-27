@@ -1,0 +1,31 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Blind Ambitions Dashboard",
+      "type": "shell",
+      "command": "npm.cmd",
+      "args": ["run", "dev", "--", "--port", "5173"],
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*",
+          "endsPattern": "Local:.*http://127.0.0.1:5173"
+        }
+      }
+    },
+    {
+      "label": "Build Blind Ambitions Dashboard",
+      "type": "shell",
+      "command": "npm.cmd",
+      "args": ["run", "build"],
+      "group": "build",
+      "problemMatcher": []
+    }
+  ]
+}

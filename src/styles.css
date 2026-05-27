@@ -23,3 +23,32 @@ select,
 textarea {
   font: inherit;
 }
+
+@media (max-width: 768px) {
+  html, body, #root {
+    min-width: 320px;
+  }
+
+  body {
+    font-size: 14px;
+  }
+
+  table {
+    min-width: auto !important;
+  }
+
+  th,
+  td {
+    white-space: normal !important;
+  }
+
+  input,
+  select,
+  textarea {
+    min-width: 0;
+  }
+
+  button {
+    min-width: 0;
+  }
+}

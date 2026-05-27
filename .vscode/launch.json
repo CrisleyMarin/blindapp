@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Open Blind Ambitions Dashboard",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://127.0.0.1:5173/",
+      "webRoot": "${workspaceFolder}/src",
+      "preLaunchTask": "Run Blind Ambitions Dashboard"
+    }
+  ]
+}
