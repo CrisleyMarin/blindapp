@@ -1,0 +1,148 @@
+{
+  "info": {
+    "name": "Blind Ambitions API",
+    "_postman_id": "blind-ambitions-api-collection",
+    "description": "Collection for the Blind Ambitions Dashboard backend API (cookie-based session).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/health",
+        "description": "Simple health endpoint."
+      }
+    },
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@blindambitions.com\",\n  \"password\": \"admin123\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": "{{baseUrl}}/api/auth/login",
+        "description": "Log in with email/password. On success the server sets an HttpOnly session cookie (`ba_session`). Use Postman cookie jar to persist cookies between requests."
+      }
+    },
+    {
+      "name": "Auth - Logout",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseUrl}}/api/auth/logout",
+        "description": "Invalidates session cookie."
+      }
+    },
+    {
+      "name": "Auth - Me",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/auth/me",
+        "description": "Get current authenticated user. Requires session cookie set by /api/auth/login."
+      }
+    },
+    {
+      "name": "Bootstrap",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/bootstrap",
+        "description": "Get initial application bootstrap data (public except requires auth in this server)."
+      }
+    },
+    {
+      "name": "Collection - GET / POST",
+      "item": [
+        {
+          "name": "GET employees",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/employees" }
+        },
+        {
+          "name": "POST employees",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"New Employee\",\n  \"role\": \"Technician\",\n  \"zone\": \"East\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/employees"
+          }
+        },
+        {
+          "name": "GET installations",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/installations" }
+        },
+        {
+          "name": "POST installations",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"customer\": \"Example Customer\",\n  \"address\": \"123 Any St\",\n  \"tech\": \"John Smith\",\n  \"product\": \"Roller Shades\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/installations"
+          }
+        },
+        {
+          "name": "GET documents",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/documents" }
+        },
+        {
+          "name": "POST documents",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"receipt.pdf\",\n  \"type\": \"Purchase Order\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/documents"
+          }
+        },
+        {
+          "name": "GET inspections",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/inspections" }
+        },
+        {
+          "name": "POST inspections",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"tech\": \"Anna Davis\",\n  \"date\": \"2025-05-27\",\n  \"status\": \"passed\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/inspections"
+          }
+        },
+        {
+          "name": "GET routes",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/routes" }
+        },
+        {
+          "name": "POST routes",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": \"R-99\",\n  \"tech\": \"Mike Johnson\",\n  \"stops\": 10\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/routes"
+          }
+        },
+        {
+          "name": "GET notifications",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/notifications" }
+        },
+        {
+          "name": "POST notifications",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"type\": \"info\",\n  \"body\": \"New notification\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/notifications"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://127.0.0.1:4000", "type": "string" }
+  ]
+}
