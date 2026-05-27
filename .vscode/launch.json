@@ -5,7 +5,7 @@
       "name": "Open Blind Ambitions Dashboard",
       "type": "chrome",
       "request": "launch",
-      "url": "http://127.0.0.1:5173/",
+      "url": "http://127.0.0.1:5174/",
       "webRoot": "${workspaceFolder}/src",
       "preLaunchTask": "Run Blind Ambitions Dashboard"
     }

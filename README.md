@@ -14,10 +14,17 @@ npm.cmd install
 npm.cmd run dev
 ```
 
-Luego abre la URL que muestre Vite, normalmente:
+Esto arranca la API segura en `http://127.0.0.1:4000` y el dashboard en:
 
 ```text
-http://127.0.0.1:5173/
+http://127.0.0.1:5174/
+```
+
+Credenciales demo:
+
+```text
+admin@blindambitions.com
+admin123
 ```
 
 ## VS Code
@@ -33,6 +40,9 @@ Usa una de estas opciones:
 ## Estructura
 
 - `src/App.jsx`: dashboard principal.
+- `src/services/api.js`: cliente HTTP del frontend.
+- `server/src/index.js`: API local con cookie httpOnly, rate limit y validaciones basicas.
+- `server/data/database.json`: base de datos local para desarrollo.
 - `src/main.jsx`: entrada de React.
 - `src/styles.css`: estilos globales base.
 - `package.json`: scripts y dependencias.

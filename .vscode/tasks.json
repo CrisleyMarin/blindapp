@@ -5,7 +5,7 @@
       "label": "Run Blind Ambitions Dashboard",
       "type": "shell",
       "command": "npm.cmd",
-      "args": ["run", "dev", "--", "--port", "5173"],
+      "args": ["run", "dev:full"],
       "isBackground": true,
       "problemMatcher": {
         "owner": "vite",
@@ -15,7 +15,7 @@
         "background": {
           "activeOnStart": true,
           "beginsPattern": ".*",
-          "endsPattern": "Local:.*http://127.0.0.1:5173"
+          "endsPattern": "Local:.*http://127.0.0.1:5174"
         }
       }
     },

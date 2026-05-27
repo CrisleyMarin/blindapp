@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+﻿import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   LayoutDashboard, Calendar, Map, Wrench, Users, ClipboardList,
   FileText, BarChart2, Bell, Settings, ChevronDown, ChevronLeft,
@@ -12,6 +12,7 @@ import {
   BarChart, Bar, XAxis, YAxis, ResponsiveContainer,
   PieChart, Pie, Cell, LineChart, Line, Tooltip, CartesianGrid, Legend
 } from "recharts";
+import { apiFetch } from "./services/api";
 
 // ─── BREAKPOINTS ──────────────────────────────────────────────────────────────
 function useBreakpoint() {
@@ -183,6 +184,30 @@ const Toast=({toasts})=>(
   </div>
 );
 
+function LoginScreen({onLogin,error,loading}){
+  const [email,setEmail]=useState("admin@blindambitions.com");
+  const [password,setPassword]=useState("admin123");
+  return(
+    <div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:C.bg,fontFamily:"'DM Sans','Segoe UI',system-ui,sans-serif",padding:20}}>
+      <div style={{width:"100%",maxWidth:380,background:C.surface,border:`1px solid ${C.border}`,borderRadius:12,padding:22,boxShadow:"0 18px 50px rgba(15,23,42,.12)"}}>
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:18}}>
+          <div style={{width:38,height:38,background:C.blue,borderRadius:9,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,color:"#fff"}}>B</div>
+          <div>
+            <div style={{fontSize:16,fontWeight:800,color:C.dark}}>Blind Ambitions</div>
+            <div style={{fontSize:12,color:C.faint}}>Secure dashboard access</div>
+          </div>
+        </div>
+        <form onSubmit={e=>{e.preventDefault();onLogin(email,password);}} style={{display:"flex",flexDirection:"column",gap:12}}>
+          <Input label="Email" value={email} onChange={e=>setEmail(e.target.value)} />
+          <Input label="Password" type="password" value={password} onChange={e=>setPassword(e.target.value)} />
+          {error&&<div style={{fontSize:12,color:C.red,background:C.redLt,borderRadius:8,padding:"8px 10px"}}>{error}</div>}
+          <Btn style={{justifyContent:"center",height:38}}>{loading?"Signing in...":"Sign In"}</Btn>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 // ─── SIDEBAR ──────────────────────────────────────────────────────────────────
 function Sidebar({collapsed,onToggle,active,onNav,bp,notifCount}){
   const isRail=bp==="md";
@@ -274,7 +299,7 @@ function BottomNav({active,onNav,notifCount}){
 // ═══════════════════════════════════════════════════════════════════════════════
 
 // ── DASHBOARD ─────────────────────────────────────────────────────────────────
-function DashboardView({bp,onNav,addToast}){
+function DashboardView({bp,onNav,addToast,data}){
   const isMobile=bp==="xs"||bp==="sm";
   const isTablet=bp==="md";
   const kpiCols=isMobile?"repeat(2,1fr)":isTablet?"repeat(3,1fr)":"repeat(5,1fr)";
@@ -344,7 +369,7 @@ function DashboardView({bp,onNav,addToast}){
         <Card>
           <CardHead><span style={{fontWeight:600,fontSize:13,color:C.dark}}>Load Balance</span></CardHead>
           <div style={{padding:"10px 16px 14px",display:"flex",flexDirection:"column",gap:10}}>
-            {INIT.employees.filter(e=>e.installs>0).slice(0,4).map(t=>(
+            {data.employees.filter(e=>e.installs>0).slice(0,4).map(t=>(
               <div key={t.name} style={{display:"flex",alignItems:"center",gap:10,fontSize:12}}>
                 <div style={{width:24,height:24,borderRadius:"50%",background:t.color+"22",color:t.color,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,fontSize:9,flexShrink:0}}>{t.avatar}</div>
                 <span style={{color:C.mid,minWidth:80,fontSize:11}}>{t.name.split(" ")[0]}</span>
@@ -396,7 +421,7 @@ function DashboardView({bp,onNav,addToast}){
           <Card style={{flex:1}}>
             <CardHead><span style={{fontWeight:600,fontSize:13,color:C.dark}}>Recent Activity</span></CardHead>
             <div style={{padding:"10px 14px",display:"flex",flexDirection:"column",gap:10}}>
-              {INIT.notifications.slice(0,4).map((a,i)=>(
+              {data.notifications.slice(0,4).map((a,i)=>(
                 <div key={i} style={{display:"flex",alignItems:"flex-start",gap:8,fontSize:12}}>
                   <span style={{fontSize:14,flexShrink:0,marginTop:1}}>{a.type==="success"?"✅":a.type==="warning"?"⚠️":a.type==="error"?"❌":"📄"}</span>
                   <div style={{flex:1}}>
@@ -414,7 +439,7 @@ function DashboardView({bp,onNav,addToast}){
               <button onClick={()=>onNav("schedule")} style={{marginLeft:"auto",background:"none",border:"none",cursor:"pointer",color:C.blue,fontSize:11,fontWeight:600}}>View all →</button>
             </CardHead>
             <div style={{padding:"10px 14px",display:"flex",flexDirection:"column",gap:8}}>
-              {INIT.installations.slice(0,4).map((u,i)=>(
+              {data.installations.slice(0,4).map((u,i)=>(
                 <div key={i} style={{display:"flex",alignItems:"center",gap:8,fontSize:12}}>
                   <span style={{width:8,height:8,borderRadius:"50%",background:[C.blue,C.green,C.amber,C.purple][i%4],flexShrink:0}}/>
                   <span style={{color:C.muted,minWidth:60}}>{u.time}</span>
@@ -431,7 +456,7 @@ function DashboardView({bp,onNav,addToast}){
 }
 
 // ── SCHEDULE ──────────────────────────────────────────────────────────────────
-function ScheduleView({bp,addToast}){
+function ScheduleView({bp,addToast,data}){
   const isMobile=bp==="xs"||bp==="sm";
   const [week,setWeek]=useState("May 12–18, 2025");
   const [view,setView]=useState("week");
@@ -439,11 +464,11 @@ function ScheduleView({bp,addToast}){
   const [wi,setWi]=useState(2);
   const days=["Mon 12","Tue 13","Wed 14","Thu 15","Fri 16"];
   const zoneColors={"#3b82f6":"Southwest","#22c55e":"East","#f59e0b":"North","#a855f7":"West"};
-  const data=[
-    {emp:INIT.employees[0],days:[42,45,"3Z",38,40]},
-    {emp:INIT.employees[1],days:[38,40,"3Z",42,41]},
-    {emp:INIT.employees[2],days:[34,36,"3Z",40,35]},
-    {emp:INIT.employees[3],days:[40,39,"3Z",41,37]},
+  const scheduleRows=[
+    {emp:data.employees[0],days:[42,45,"3Z",38,40]},
+    {emp:data.employees[1],days:[38,40,"3Z",42,41]},
+    {emp:data.employees[2],days:[34,36,"3Z",40,35]},
+    {emp:data.employees[3],days:[40,39,"3Z",41,37]},
   ];
   const [selected,setSelected]=useState(null);
 
@@ -476,7 +501,7 @@ function ScheduleView({bp,addToast}){
             </tr>
           </thead>
           <tbody>
-            {data.map(({emp,days:ds},ri)=>(
+            {scheduleRows.map(({emp,days:ds},ri)=>(
               <tr key={ri} style={{borderBottom:ri<3?`1px solid ${C.border}`:"none",transition:"background .1s"}}
                 onMouseEnter={e=>e.currentTarget.style.background="#f8fafc"}
                 onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
@@ -542,9 +567,10 @@ function ScheduleView({bp,addToast}){
 }
 
 // ── ROUTES ────────────────────────────────────────────────────────────────────
-function RoutesView({bp,addToast}){
-  const [selected,setSelected]=useState(INIT.routes[0]);
+function RoutesView({bp,addToast,data}){
+  const [selected,setSelected]=useState(data.routes[0]);
   const [optimized,setOptimized]=useState({});
+  useEffect(()=>{ if(data.routes?.length)setSelected(data.routes[0]); },[data.routes]);
   const stops=[
     {time:"08:00 AM",name:"Start Point",status:"done"},
     {time:"08:15 AM",name:"Johnson Residence",status:"done"},
@@ -565,7 +591,7 @@ function RoutesView({bp,addToast}){
       <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1.6fr",gap:14}}>
         {/* Route list */}
         <div style={{display:"flex",flexDirection:"column",gap:10}}>
-          {INIT.routes.map(r=>(
+          {data.routes.map(r=>(
             <Card key={r.id} style={{cursor:"pointer",border:selected.id===r.id?`2px solid ${C.blue}`:`1px solid ${C.border}`,transition:"border .15s"}} onClick={()=>setSelected(r)}>
               <div style={{padding:"12px 14px"}}>
                 <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
@@ -642,8 +668,8 @@ function RoutesView({bp,addToast}){
 }
 
 // ── INSTALLATIONS ─────────────────────────────────────────────────────────────
-function InstallsView({bp,addToast}){
-  const [installs,setInstalls]=useState(INIT.installations);
+function InstallsView({bp,addToast,data}){
+  const [installs,setInstalls]=useState(data.installations);
   const [filter,setFilter]=useState("all");
   const [search,setSearch]=useState("");
   const [selected,setSelected]=useState(null);
@@ -651,6 +677,7 @@ function InstallsView({bp,addToast}){
   const [form,setForm]=useState({customer:"",address:"",tech:"",product:"",notes:""});
   const isMobile=bp==="xs"||bp==="sm";
   const tableMinWidth=isMobile?320:560;
+  useEffect(()=>setInstalls(data.installations || []),[data.installations]);
 
   const filtered=installs.filter(i=>{
     const matchF=filter==="all"||i.status===filter;
@@ -771,7 +798,7 @@ function InstallsView({bp,addToast}){
               <label style={{fontSize:10,color:C.faint,fontWeight:600,textTransform:"uppercase",letterSpacing:.4}}>Technician</label>
               <select value={form.tech} onChange={e=>setForm(p=>({...p,tech:e.target.value}))} style={{border:`1px solid ${C.border}`,borderRadius:7,padding:"7px 10px",fontSize:12,outline:"none",color:C.mid,background:"#fafafa"}}>
                 <option value="">Select...</option>
-                {INIT.employees.filter(e=>e.role==="Technician"||e.role==="Lead Technician").map(e=><option key={e.id} value={e.name}>{e.name}</option>)}
+                {data.employees.filter(e=>e.role==="Technician"||e.role==="Lead Technician").map(e=><option key={e.id} value={e.name}>{e.name}</option>)}
               </select>
             </div>
             <div style={{display:"flex",flexDirection:"column",gap:4}}>
@@ -797,11 +824,12 @@ function InstallsView({bp,addToast}){
 }
 
 // ── EMPLOYEES ─────────────────────────────────────────────────────────────────
-function EmployeesView({bp,addToast}){
-  const [employees,setEmployees]=useState(INIT.employees);
+function EmployeesView({bp,addToast,data}){
+  const [employees,setEmployees]=useState(data.employees);
   const [search,setSearch]=useState("");
   const [selected,setSelected]=useState(null);
   const [showAdd,setShowAdd]=useState(false);
+  useEffect(()=>setEmployees(data.employees || []),[data.employees]);
 
   const filtered=employees.filter(e=>!search||e.name.toLowerCase().includes(search.toLowerCase())||e.zone.toLowerCase().includes(search.toLowerCase()));
 
@@ -923,13 +951,15 @@ function EmployeesView({bp,addToast}){
 }
 
 // ── INSPECTIONS ───────────────────────────────────────────────────────────────
-function InspectionsView({bp,addToast}){
+function InspectionsView({bp,addToast,data}){
   const [items,setItems]=useState({tools:true,vehicle:true,safety:true,uniform:true,gps:true});
   const [submitted,setSubmitted]=useState(false);
-  const [history,setHistory]=useState(INIT.inspections);
+  const [history,setHistory]=useState(data.inspections);
   const [showHistory,setShowHistory]=useState(false);
-  const [selTech,setSelTech]=useState(INIT.employees[0].name);
+  const [selTech,setSelTech]=useState(data.employees[0].name);
   const [month,setMonth]=useState("May 2025");
+  useEffect(()=>setHistory(data.inspections || []),[data.inspections]);
+  useEffect(()=>{ if(data.employees?.length)setSelTech(data.employees[0].name); },[data.employees]);
 
   const toggle=k=>setItems(p=>({...p,[k]:!p[k]}));
   const allPass=Object.values(items).every(Boolean);
@@ -979,7 +1009,7 @@ function InspectionsView({bp,addToast}){
                 <div style={{display:"flex",flexDirection:"column",gap:4}}>
                   <label style={{fontSize:10,color:C.faint,fontWeight:600,textTransform:"uppercase",letterSpacing:.4}}>Technician</label>
                   <select value={selTech} onChange={e=>setSelTech(e.target.value)} style={{border:`1px solid ${C.border}`,borderRadius:7,padding:"7px 10px",fontSize:12,outline:"none",color:C.mid,background:"#fafafa"}}>
-                    {INIT.employees.map(e=><option key={e.id}>{e.name}</option>)}
+                    {data.employees.map(e=><option key={e.id}>{e.name}</option>)}
                   </select>
                 </div>
                 <div style={{borderBottom:`1px solid ${C.border}`,paddingBottom:8,display:"grid",gridTemplateColumns:"1fr auto auto",gap:6}}>
@@ -1060,12 +1090,13 @@ function InspectionsView({bp,addToast}){
 }
 
 // ── DOCUMENTS ─────────────────────────────────────────────────────────────────
-function DocumentsView({bp,addToast}){
-  const [docs,setDocs]=useState(INIT.documents);
+function DocumentsView({bp,addToast,data}){
+  const [docs,setDocs]=useState(data.documents);
   const [search,setSearch]=useState("");
   const [dragging,setDragging]=useState(false);
   const [filter,setFilter]=useState("all");
   const inputRef=useRef();
+  useEffect(()=>setDocs(data.documents || []),[data.documents]);
 
   const types=["all","Purchase Order","Installation Photo","Inspection Report","Route Map","Installation Order","Before Photo"];
   const filtered=docs.filter(d=>{
@@ -1147,7 +1178,7 @@ function DocumentsView({bp,addToast}){
 }
 
 // ── REPORTS ───────────────────────────────────────────────────────────────────
-function ReportsView({bp,addToast}){
+function ReportsView({bp,addToast,data}){
   const [period,setPeriod]=useState("weekly");
   const isMobile=bp==="xs"||bp==="sm";
 
@@ -1224,7 +1255,7 @@ function ReportsView({bp,addToast}){
               </tr>
             </thead>
             <tbody>
-              {INIT.employees.filter(e=>e.installs>0).map((emp,i)=>{
+              {data.employees.filter(e=>e.installs>0).map((emp,i)=>{
                 const rate=Math.round(80+Math.random()*18);
                 const ot=Math.round(75+Math.random()*20);
                 const load=Math.round(emp.installs/50*100);
@@ -1429,7 +1460,9 @@ export default function App(){
   const [collapsed,setCollapsed]=useState(false);
   const [drawerOpen,setDrawerOpen]=useState(false);
   const [activeNav,setActiveNav]=useState("dashboard");
-  const [notifs,setNotifs]=useState(INIT.notifications);
+  const [data,setData]=useState(INIT);
+  const [session,setSession]=useState({loading:true,user:null,error:"",signingIn:false});
+  const [notifs,setNotifs]=useState(data.notifications);
   const [toasts,setToasts]=useState([]);
   const toastId=useRef(0);
 
@@ -1440,6 +1473,37 @@ export default function App(){
     setToasts(p=>[...p,{id,msg,type}]);
     setTimeout(()=>setToasts(p=>p.filter(t=>t.id!==id)),2800);
   },[]);
+
+  const loadBootstrap=useCallback(async()=>{
+    const apiData=await apiFetch("/bootstrap");
+    setData(apiData);
+    setNotifs(apiData.notifications || []);
+  },[]);
+
+  useEffect(()=>{
+    let active=true;
+    apiFetch("/auth/me")
+      .then(async(res)=>{
+        if(!active)return;
+        setSession({loading:false,user:res.user,error:"",signingIn:false});
+        await loadBootstrap();
+      })
+      .catch(()=>{
+        if(active)setSession({loading:false,user:null,error:"",signingIn:false});
+      });
+    return()=>{active=false;};
+  },[loadBootstrap]);
+
+  const handleLogin=useCallback(async(email,password)=>{
+    setSession(p=>({...p,signingIn:true,error:""}));
+    try{
+      const res=await apiFetch("/auth/login",{method:"POST",body:JSON.stringify({email,password})});
+      await loadBootstrap();
+      setSession({loading:false,user:res.user,error:"",signingIn:false});
+    }catch(err){
+      setSession({loading:false,user:null,error:err.message,signingIn:false});
+    }
+  },[loadBootstrap]);
 
   const handleNav=useCallback((id)=>{
     setActiveNav(id);
@@ -1456,7 +1520,7 @@ export default function App(){
   };
 
   const renderView=()=>{
-    const props={bp,addToast,onNav:handleNav};
+    const props={bp,addToast,onNav:handleNav,data};
     switch(activeNav){
       case "dashboard":  return <DashboardView {...props}/>;
       case "schedule":   return <ScheduleView {...props}/>;
@@ -1471,6 +1535,14 @@ export default function App(){
       default:           return <DashboardView {...props}/>;
     }
   };
+
+  if(session.loading){
+    return <div style={{height:"100vh",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'DM Sans','Segoe UI',system-ui,sans-serif",background:C.bg,color:C.muted,fontWeight:700}}>Loading secure session...</div>;
+  }
+
+  if(!session.user){
+    return <LoginScreen onLogin={handleLogin} error={session.error} loading={session.signingIn}/>;
+  }
 
   return(
     <div style={{display:"flex",height:"100vh",overflow:"hidden",fontFamily:"'DM Sans','Segoe UI',system-ui,sans-serif",background:C.bg}}>

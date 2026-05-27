@@ -1,0 +1,45 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "John Dispatcher",
+      "email": "admin@blindambitions.com",
+      "role": "admin",
+      "passwordHash": "demo"
+    }
+  ],
+  "notifications": [
+    {"id":1,"type":"success","title":"Installation completed","body":"Mike finished job #1-1005 at Johnson Residence","time":"10 min ago","read":false},
+    {"id":2,"type":"info","title":"New purchase order","body":"PO-1006 uploaded for Williams Home","time":"25 min ago","read":false},
+    {"id":3,"type":"warning","title":"Route R-21 delay","body":"Traffic on I-77 - estimated +25 min","time":"45 min ago","read":false},
+    {"id":4,"type":"success","title":"Inspection submitted","body":"Anna Davis completed monthly inspection","time":"1 hr ago","read":true}
+  ],
+  "employees": [
+    {"id":1,"name":"John Smith","role":"Lead Technician","zone":"Southwest","phone":"(704)555-0101","email":"john@blindambitions.com","installs":42,"status":"active","avatar":"JS","color":"#3b82f6"},
+    {"id":2,"name":"Mike Johnson","role":"Technician","zone":"East","phone":"(704)555-0102","email":"mike@blindambitions.com","installs":38,"status":"active","avatar":"MJ","color":"#22c55e"},
+    {"id":3,"name":"Anna Davis","role":"Inspector","zone":"North","phone":"(704)555-0103","email":"anna@blindambitions.com","installs":34,"status":"active","avatar":"AD","color":"#f59e0b"},
+    {"id":4,"name":"Robert Brown","role":"Technician","zone":"West","phone":"(704)555-0104","email":"robert@blindambitions.com","installs":40,"status":"active","avatar":"RB","color":"#a855f7"}
+  ],
+  "installations": [
+    {"id":"#1-1005","customer":"Johnson Residence","address":"1234 Pine St, Charlotte","tech":"Mike Johnson","product":"Roller Shades","status":"completed","date":"May 14","time":"08:15 AM"},
+    {"id":"#1-1006","customer":"Smith Commercial","address":"456 Trade St, Charlotte","tech":"John Smith","product":"Motorized Blinds","status":"in-progress","date":"May 14","time":"09:30 AM"},
+    {"id":"#1-1007","customer":"Williams Home","address":"789 Oak Ave, Charlotte","tech":"Mike Johnson","product":"Cellular Shades","status":"pending","date":"May 14","time":"11:00 AM"},
+    {"id":"#1-1008","customer":"Brown Residence","address":"321 Maple Dr, Charlotte","tech":"John Smith","product":"Wood Blinds","status":"pending","date":"May 14","time":"01:00 PM"}
+  ],
+  "documents": [
+    {"id":1,"name":"PO-1005.pdf","type":"Purchase Order","date":"May 14, 2025","size":"2.4 MB","icon":"PDF"},
+    {"id":2,"name":"Installation-Johnson.jpg","type":"Installation Photo","date":"May 14, 2025","size":"1.8 MB","icon":"IMG"},
+    {"id":3,"name":"Inspection-May.pdf","type":"Inspection Report","date":"May 12, 2025","size":"3.2 MB","icon":"PDF"}
+  ],
+  "inspections": [
+    {"id":"INS-001","tech":"Anna Davis","date":"May 14, 2025","vehicle":"Truck #2","status":"passed","items":{"tools":true,"vehicle":true,"safety":true,"uniform":true,"gps":true}},
+    {"id":"INS-002","tech":"Mike Johnson","date":"May 13, 2025","vehicle":"Truck #3","status":"passed","items":{"tools":true,"vehicle":true,"safety":true,"uniform":true,"gps":true}},
+    {"id":"INS-003","tech":"Robert Brown","date":"May 12, 2025","vehicle":"Truck #4","status":"failed","items":{"tools":true,"vehicle":false,"safety":true,"uniform":true,"gps":true}}
+  ],
+  "routes": [
+    {"id":"R-21","tech":"Mike Johnson","stops":44,"distance":"87.4 mi","eta":"8h 15m","traffic":"Moderate","status":"in-progress","color":"#22c55e"},
+    {"id":"R-15","tech":"John Smith","stops":38,"distance":"72.1 mi","eta":"7h 00m","traffic":"Low","status":"active","color":"#3b82f6"},
+    {"id":"R-08","tech":"Anna Davis","stops":29,"distance":"51.3 mi","eta":"5h 30m","traffic":"High","status":"delayed","color":"#ef4444"}
+  ],
+  "auditLogs": []
+}
